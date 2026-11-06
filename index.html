@@ -1,143 +1,142 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#09090d">
   <title>MAFIA ONLINE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
 
-    <header class="header">
-      <a class="logo" href="#" onclick="goHome()">MAFIA<span>.</span></a>
-      <div class="header-right">
-        <span class="online-indicator"></span>
-        <span class="online-label" data-i18n="online">ONLINE</span>
-        <button class="avatar" onclick="showProfile()">👤</button>
+<header class="navbar">
+  <div class="logo">M<span>.</span> MAFIA</div>
+  <div class="online"><i></i> ONLINE</div>
+  <button class="profile" id="profileBtn">N</button>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-text">
+      <div class="subtitle">THE CITY NEVER SLEEPS</div>
+
+      <h1>СЕНІМГЕ<br><span>ОРЫН ЖОҚ.</span></h1>
+
+      <p>
+        Қалада әркімнің өз құпиясы бар.
+        Рөліңді жасыр, достарыңмен ойна
+        және жеңіске жет.
+      </p>
+
+      <div class="buttons">
+        <button class="primary" id="createBtn">＋ БӨЛМЕ ҚҰРУ</button>
+        <button class="secondary" id="scrollJoin">КОДПЕН КІРУ ↗</button>
       </div>
-    </header>
 
-    <main id="main">
-      <section class="hero">
-        <div class="eyebrow"><span></span> MAFIA MULTIPLAYER</div>
-        <h1>TRUST<br><span>NO ONE.</span></h1>
-        <p data-i18n="subtitle">Your friends. Your enemies. One city.</p>
-
-        <button class="btn btn-primary" onclick="createRoom()" data-i18n="create">CREATE ROOM</button>
-        <button class="btn btn-outline" onclick="joinRoom()" data-i18n="join">JOIN ROOM</button>
-
-        <div class="hero-bottom">
-          <span>●</span> <span data-i18n="ready">THE CITY IS WAITING</span>
-        </div>
-      </section>
-
-      <section class="stats">
-        <div class="stat-card">
-          <span class="stat-icon">♟</span>
-          <strong id="online-count">0</strong>
-          <small data-i18n="playersOnline">PLAYERS ONLINE</small>
-        </div>
-        <div class="stat-card">
-          <span class="stat-icon">♜</span>
-          <strong id="games-count">0</strong>
-          <small data-i18n="gamesPlayed">GAMES PLAYED</small>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-heading">
-          <h2 data-i18n="menu">EXPLORE</h2>
-          <span class="section-line"></span>
-        </div>
-
-        <div class="menu-grid">
-          <button class="menu-card" onclick="showFriends()">
-            <span>♟</span>
-            <b data-i18n="friends">Friends</b>
-            <small data-i18n="friendsDesc">Your people</small>
-          </button>
-
-          <button class="menu-card" onclick="showLeaderboard()">
-            <span>♛</span>
-            <b data-i18n="leaderboard">Leaderboard</b>
-            <small data-i18n="leaderDesc">Top players</small>
-          </button>
-
-          <button class="menu-card" onclick="showHistory()">
-            <span>◷</span>
-            <b data-i18n="history">History</b>
-            <small data-i18n="historyDesc">Past games</small>
-          </button>
-
-          <button class="menu-card" onclick="showSettings()">
-            <span>⚙</span>
-            <b data-i18n="settings">Settings</b>
-            <small data-i18n="settingsDesc">Customize</small>
-          </button>
-        </div>
-      </section>
-
-      <section class="section room-section" id="room-section" hidden>
-        <div class="section-heading">
-          <h2 data-i18n="yourRoom">YOUR ROOM</h2>
-          <span class="section-line"></span>
-        </div>
-
-        <div class="room-card">
-          <div class="room-top">
-            <span class="room-status">
-              <i></i><span data-i18n="waiting">WAITING FOR PLAYERS</span>
-            </span>
-            <span class="room-code" id="room-code">------</span>
-          </div>
-
-          <h3 id="room-title">MAFIA ROOM</h3>
-          <p id="room-description"></p>
-
-          <div class="room-actions">
-            <button class="btn btn-primary" onclick="copyRoomCode()" data-i18n="copyCode">COPY CODE</button>
-            <button class="btn btn-outline" onclick="leaveRoom()" data-i18n="leave">LEAVE</button>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <nav class="bottom-nav">
-      <button class="nav-item active" onclick="goHome()">
-        <span>⌂</span><small data-i18n="home">Home</small>
-      </button>
-      <button class="nav-item" onclick="createRoom()">
-        <span>♟</span><small data-i18n="play">Play</small>
-      </button>
-      <button class="nav-item" onclick="showFriends()">
-        <span>♧</span><small data-i18n="friends">Friends</small>
-      </button>
-      <button class="nav-item" onclick="showSettings()">
-        <span>⚙</span><small data-i18n="settings">Settings</small>
-      </button>
-    </nav>
-  </div>
-
-  <div class="modal" id="modal" hidden>
-    <div class="modal-backdrop" onclick="closeModal()"></div>
-    <div class="modal-box">
-      <button class="close-btn" onclick="closeModal()">×</button>
-      <div id="modal-content"></div>
+      <div class="stats">
+        <div><b>30</b><small>ОЙЫНШЫҒА ДЕЙІН</small></div>
+        <div><b>LIVE</b><small>ОНЛАЙН ОЙЫН</small></div>
+      </div>
     </div>
+
+    <div class="hero-image">
+      <div class="image-overlay"></div>
+      <div class="image-title">WELCOME TO THE CITY</div>
+      <div class="big-m">M</div>
+    </div>
+  </section>
+
+  <section class="lobby">
+    <div class="section-title">
+      <div>
+        <small>ОЙЫНҒА ҚОСЫЛ</small>
+        <h2>ОЙЫН БӨЛМЕЛЕРІ</h2>
+      </div>
+      <span class="live">● LIVE</span>
+    </div>
+
+    <div class="content">
+
+      <div class="rooms">
+        <div class="room">
+          <div class="room-icon">♠</div>
+          <div class="room-info">
+            <b>Қызыл аудан</b>
+            <small>Классикалық ойын</small>
+          </div>
+          <div class="players">8/12</div>
+          <span class="waiting">КҮТУДЕ</span>
+          <button class="join" data-code="A7K2">КІРУ →</button>
+        </div>
+
+        <div class="room">
+          <div class="room-icon">♦</div>
+          <div class="room-info">
+            <b>Түнгі қала</b>
+            <small>Жылдам ойын</small>
+          </div>
+          <div class="players">10/10</div>
+          <span class="playing">ОЙЫНДА</span>
+          <button class="join disabled" disabled>ТОЛЫҚ</button>
+        </div>
+
+        <div class="room">
+          <div class="room-icon">♣</div>
+          <div class="room-info">
+            <b>Донның үйі</b>
+            <small>Классикалық ойын</small>
+          </div>
+          <div class="players">4/8</div>
+          <span class="waiting">КҮТУДЕ</span>
+          <button class="join" data-code="M9P4">КІРУ →</button>
+        </div>
+      </div>
+
+      <div class="join-panel" id="joinPanel">
+        <div class="panel-icon">⌁</div>
+        <h3>ЖЕКЕ БӨЛМЕГЕ КІРУ</h3>
+        <p>Досың жіберген кодты енгіз.</p>
+
+        <label>БӨЛМЕ КОДЫ</label>
+        <input id="roomCode" maxlength="6" placeholder="A7K2">
+
+        <button class="primary full" id="joinBtn">ҚОСЫЛУ →</button>
+        <div class="or">НЕМЕСЕ</div>
+        <button class="secondary full" id="randomBtn">КЕЗДЕЙСОҚ ОЙЫН</button>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 MAFIA ONLINE</span>
+    <span>ҚАЛА ҰЙЫҚТАМАЙДЫ.</span>
+  </footer>
+
+</main>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-box">
+    <button class="close" id="closeModal">×</button>
+    <small>NEW GAME</small>
+    <h2>БӨЛМЕ ҚҰРУ</h2>
+    <p>Ойыншы атыңды енгіз.</p>
+
+    <input id="nickname" maxlength="16" placeholder="Ойыншы аты">
+
+    <button class="primary full" id="confirmBtn">ЖАЛҒАСТЫРУ →</button>
+    <div id="result"></div>
   </div>
+</div>
 
-  <div class="toast" id="toast"></div>
+<div class="toast" id="toast"></div>
 
-  <!-- Supabase library -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Project configuration -->
-  <script src="config.js"></script>
-
-  <!-- Main game script -->
-  <script src="script.js"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
