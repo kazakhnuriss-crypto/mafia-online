@@ -15,19 +15,32 @@ function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
 
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
+  setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
 function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
+function getName() {
+  let name = localStorage.getItem("mafia_name");
+
+  if (!name) {
+    name = prompt("Ойыншы никнейміңді енгіз:");
+  }
+
+  if (!name || !name.trim()) return null;
+
+  name = name.trim().slice(0, 20);
+  localStorage.setItem("mafia_name", name);
+
+  return name;
+}
+
 function openModal() {
   modal.classList.remove("hidden");
-  result.textContent = "";
   nickname.value = localStorage.getItem("mafia_name") || "";
+  result.textContent = "";
 }
 
 function hideModal() {
@@ -37,6 +50,7 @@ function hideModal() {
 createBtn.addEventListener("click", openModal);
 closeModal.addEventListener("click", hideModal);
 
+// БӨЛМЕ ҚҰРУ
 confirmBtn.addEventListener("click", async () => {
   const host = nickname.value.trim();
 
@@ -45,13 +59,7 @@ confirmBtn.addEventListener("click", async () => {
     return;
   }
 
-  if (!app) {
-    showToast("Appwrite конфигурациясы табылмады!");
-    return;
-  }
-
   confirmBtn.disabled = true;
-  confirmBtn.textContent = "ЖАСАЛУДА...";
 
   try {
     const code = generateCode();
@@ -61,9 +69,10 @@ confirmBtn.addEventListener("click", async () => {
       tableId: app.tableId,
       rowId: Appwrite.ID.unique(),
       data: {
-        code: code,
-        host: host,
+        code,
+        host,
         maxPlayers: 20,
+        currentPlayers: 1,
         status: "waiting",
         players: JSON.stringify([host])
       }
@@ -72,20 +81,20 @@ confirmBtn.addEventListener("click", async () => {
     localStorage.setItem("mafia_name", host);
 
     result.textContent = "Бөлме коды: " + code;
-    showToast("Бөлме сәтті құрылды!");
+    showToast("Бөлме құрылды!");
 
   } catch (error) {
     console.error(error);
     showToast("Қате: " + error.message);
   } finally {
     confirmBtn.disabled = false;
-    confirmBtn.textContent = "ЖАЛҒАСТЫРУ →";
   }
 });
 
+// БӨЛМЕГЕ ҚОСЫЛУ
 async function joinRoom(code) {
   if (!app) {
-    showToast("Appwrite қосылмаған!");
+    showToast("Appwrite табылмады!");
     return;
   }
 
@@ -96,7 +105,12 @@ async function joinRoom(code) {
     return;
   }
 
+  const player = getName();
+  if (!player) return;
+
   try {
+    showToast("Бөлме ізделуде...");
+
     const response = await app.tablesDB.listRows({
       databaseId: app.databaseId,
       tableId: app.tableId,
@@ -107,17 +121,54 @@ async function joinRoom(code) {
     });
 
     if (response.rows.length === 0) {
-      showToast("Мұндай бөлме табылмады!");
+      showToast("Бөлме табылмады!");
       return;
     }
 
     const room = response.rows[0];
 
-    showToast("Бөлме табылды: " + room.code);
+    if (room.status !== "waiting") {
+      showToast("Бұл ойын басталып кеткен!");
+      return;
+    }
+
+    let players = [];
+
+    try {
+      players = JSON.parse(room.players || "[]");
+    } catch {
+      players = [];
+    }
+
+    if (players.includes(player)) {
+      showToast("Сен бұл бөлмедесің!");
+      return;
+    }
+
+    const count = players.length;
+
+    if (count >= room.maxPlayers) {
+      showToast("Бөлме толып кетті!");
+      return;
+    }
+
+    players.push(player);
+
+    await app.tablesDB.updateRow({
+      databaseId: app.databaseId,
+      tableId: app.tableId,
+      rowId: room.$id,
+      data: {
+        players: JSON.stringify(players),
+        currentPlayers: players.length
+      }
+    });
+
+    showToast("Бөлмеге сәтті қосылдың!");
 
   } catch (error) {
     console.error(error);
-    showToast("Бөлмеге қосылу қатесі: " + error.message);
+    showToast("Қосылу қатесі: " + error.message);
   }
 }
 
@@ -131,25 +182,27 @@ document.querySelectorAll(".room-join-btn").forEach(button => {
   });
 });
 
+// ПРОФИЛЬ
 document.getElementById("profileBtn").addEventListener("click", () => {
   const oldName = localStorage.getItem("mafia_name") || "";
-  const newName = prompt("Жаңа никнейм:", oldName);
+  const name = prompt("Жаңа никнейм:", oldName);
 
-  if (newName && newName.trim()) {
-    localStorage.setItem("mafia_name", newName.trim());
+  if (name && name.trim()) {
+    localStorage.setItem("mafia_name", name.trim().slice(0, 20));
     showToast("Никнейм сақталды!");
   }
 });
 
+// БӨЛМЕГЕ ЖЫЛЖУ
 document.getElementById("scrollJoin").addEventListener("click", () => {
   document.getElementById("joinSection").scrollIntoView({
     behavior: "smooth"
   });
 });
 
+// КЕЗДЕЙСОҚ ОЙЫН
 document.getElementById("randomBtn").addEventListener("click", () => {
-  showToast("Әзірге бөлмелер іздеу функциясы дайындалуда.");
+  showToast("Кездейсоқ іздеу келесі кезеңде қосылады.");
 });
 
-console.log("Mafia Online дайын!");
-console.log("Appwrite конфигурациясы:", app ? "табылды" : "табылмады");
+console.log("Mafia Online іске қосылды!");
