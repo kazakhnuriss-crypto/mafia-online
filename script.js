@@ -1,25 +1,28 @@
 
 const app = window.mafiaAppwrite;
-
 const $ = id => document.getElementById(id);
 
 let currentRoom = null;
 let refreshTimer = null;
 let busy = false;
-let lastGameStatus = "waiting";
+let lastStatus = null;
 
-const createBtn = $("createBtn");
-const joinBtn = $("joinBtn");
-const modal = $("modal");
-const nickname = $("nickname");
-const result = $("result");
-const toast = $("toast");
+const MAX_MESSAGES = 5;
+
+// NOTIFICATIONS
 
 function showToast(message) {
+  const toast = $("toast");
   toast.textContent = message;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
+
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
 }
+
+// PLAYER
 
 function getPlayer() {
   let id = localStorage.getItem("mafia_player_id");
@@ -36,16 +39,24 @@ function getPlayer() {
 }
 
 function saveName(name) {
-  localStorage.setItem("mafia_name", name.trim().slice(0, 20));
+  localStorage.setItem(
+    "mafia_name",
+    name.trim().slice(0, 20)
+  );
 }
 
 function generateCode() {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
+  return Math.random()
+    .toString(36)
+    .substring(2, 8)
+    .toUpperCase();
 }
 
 function normalizePlayers(value) {
   try {
     const list = JSON.parse(value || "[]");
+
+    if (!Array.isArray(list)) return [];
 
     return list.map(item => {
       if (typeof item === "string") {
@@ -69,8 +80,8 @@ function normalizePlayers(value) {
 
 function normalizeMessages(value) {
   try {
-    const messages = JSON.parse(value || "[]");
-    return Array.isArray(messages) ? messages : [];
+    const list = JSON.parse(value || "[]");
+    return Array.isArray(list) ? list : [];
   } catch {
     return [];
   }
@@ -79,24 +90,25 @@ function normalizeMessages(value) {
 // MODAL
 
 function openModal() {
-  modal.classList.remove("hidden");
-  nickname.value = localStorage.getItem("mafia_name") || "";
-  result.textContent = "";
+  $("modal").classList.remove("hidden");
+  $("nickname").value =
+    localStorage.getItem("mafia_name") || "";
+  $("result").textContent = "";
 }
 
-function hideModal() {
-  modal.classList.add("hidden");
+function closeModal() {
+  $("modal").classList.add("hidden");
 }
 
-createBtn.addEventListener("click", openModal);
-$("closeModal").addEventListener("click", hideModal);
+$("createBtn").addEventListener("click", openModal);
+$("closeModal").addEventListener("click", closeModal);
 
 // CREATE ROOM
 
 $("confirmBtn").addEventListener("click", async () => {
   if (busy) return;
 
-  const name = nickname.value.trim();
+  const name = $("nickname").value.trim();
 
   if (!name) {
     showToast("Никнейм енгіз!");
@@ -111,14 +123,12 @@ $("confirmBtn").addEventListener("click", async () => {
     player.name = name;
     saveName(name);
 
-    const code = generateCode();
-
     const room = await app.tablesDB.createRow({
       databaseId: app.databaseId,
       tableId: app.tableId,
       rowId: Appwrite.ID.unique(),
       data: {
-        code,
+        code: generateCode(),
         host: name,
         maxPlayers: 20,
         currentPlayers: 1,
@@ -126,7 +136,7 @@ $("confirmBtn").addEventListener("click", async () => {
         players: JSON.stringify([
           {
             id: player.id,
-            name,
+            name: name,
             ready: true
           }
         ]),
@@ -134,13 +144,13 @@ $("confirmBtn").addEventListener("click", async () => {
       }
     });
 
-    hideModal();
+    closeModal();
     await enterLobby(room);
-    showToast("Бөлме құрылды!");
+    showToast("🎉 Бөлме құрылды!");
 
   } catch (error) {
     console.error(error);
-    showToast("Қате: " + error.message);
+    showToast("Бөлме құру қатесі: " + error.message);
   } finally {
     busy = false;
     $("confirmBtn").disabled = false;
@@ -195,7 +205,7 @@ async function joinRoom(code) {
     }
 
     const player = getPlayer();
-    let players = normalizePlayers(room.players);
+    const players = normalizePlayers(room.players);
 
     if (!players.some(p => p.id === player.id)) {
       if (players.length >= room.maxPlayers) {
@@ -221,7 +231,7 @@ async function joinRoom(code) {
     }
 
     await enterLobby(room);
-    showToast("Бөлмеге кірдің!");
+    showToast("👋 Бөлмеге қосылдың!");
 
   } catch (error) {
     console.error(error);
@@ -231,7 +241,7 @@ async function joinRoom(code) {
   }
 }
 
-joinBtn.addEventListener("click", () => {
+$("joinBtn").addEventListener("click", () => {
   joinRoom($("roomCode").value);
 });
 
@@ -245,11 +255,14 @@ document.querySelectorAll(".room-join-btn").forEach(button => {
 
 async function enterLobby(room) {
   currentRoom = room;
-  lastGameStatus = room.status;
+  lastStatus = room.status;
 
   $("lobby").classList.remove("hidden");
   $("lobbyCode").textContent = room.code;
-  $("lobby").scrollIntoView({ behavior: "smooth" });
+
+  $("lobby").scrollIntoView({
+    behavior: "smooth"
+  });
 
   await refreshLobby();
 
@@ -277,9 +290,9 @@ async function refreshLobby() {
 
     $("lobbyCode").textContent = room.code;
     $("lobbyCount").textContent =
-      `Ойыншылар: ${players.length} / ${room.maxPlayers}`;
+      `${players.length} / ${room.maxPlayers}`;
 
-    // PLAYER LIST
+    // PLAYERS
 
     const list = $("playersList");
     list.replaceChildren();
@@ -291,44 +304,49 @@ async function refreshLobby() {
       const owner = document.createElement("span");
       owner.className = "room-status";
       owner.textContent =
-        player.name === room.host ? "OWNER" : "PLAYER";
+        player.name === room.host ? "👑 HOST" : "PLAYER";
 
       const title = document.createElement("h3");
-      title.textContent = player.name;
+      title.textContent = "👤 " + player.name;
 
       const status = document.createElement("p");
       status.textContent = player.ready
         ? "🟢 ДАЙЫН"
-        : "🔴 КҮТУДЕ";
+        : "⏳ КҮТУДЕ";
 
       card.append(owner, title, status);
       list.append(card);
     });
 
-    const isOwner = me.name === room.host;
-
-    $("startGameBtn").classList.toggle("hidden", !isOwner);
+    // READY BUTTON
 
     const myPlayer = players.find(p => p.id === me.id);
 
     $("readyBtn").textContent =
-      myPlayer?.ready ? "ДАЙЫН ЕМЕСПІН" : "ДАЙЫН";
+      myPlayer?.ready ? "✖ ДАЙЫН ЕМЕСПІН" : "✓ ДАЙЫН";
+
+    // HOST BUTTON
+
+    $("startGameBtn").classList.toggle(
+      "hidden",
+      me.name !== room.host
+    );
 
     // CHAT
 
     renderMessages(normalizeMessages(room.messages));
 
-    // GAME STATUS
+    // STATUS
 
-    if (room.status === "playing" && lastGameStatus !== "playing") {
-      showToast("Ойын басталды!");
+    if (room.status === "playing" && lastStatus !== "playing") {
+      showToast("⚔️ Ойын басталды!");
     }
 
-    lastGameStatus = room.status;
+    lastStatus = room.status;
 
   } catch (error) {
     console.error(error);
-    showToast("Lobby жаңарту қатесі");
+    showToast("Бөлмені жаңарту қатесі");
   }
 }
 
@@ -339,9 +357,19 @@ function renderMessages(messages) {
   box.replaceChildren();
 
   if (!messages.length) {
-    const empty = document.createElement("p");
+    const empty = document.createElement("div");
     empty.className = "chat-empty";
-    empty.textContent = "Әзірге хабарлама жоқ...";
+
+    const emoji = document.createElement("span");
+    emoji.textContent = "💬";
+
+    const title = document.createElement("p");
+    title.textContent = "Әзірге хабарлама жоқ";
+
+    const hint = document.createElement("small");
+    hint.textContent = "Бірінші болып жаз!";
+
+    empty.append(emoji, title, hint);
     box.append(empty);
     return;
   }
@@ -351,7 +379,7 @@ function renderMessages(messages) {
     item.className = "chat-message";
 
     const name = document.createElement("strong");
-    name.textContent = message.name + ": ";
+    name.textContent = "👤 " + message.name + ": ";
 
     const text = document.createElement("span");
     text.textContent = message.text;
@@ -363,7 +391,7 @@ function renderMessages(messages) {
   box.scrollTop = box.scrollHeight;
 }
 
-// SEND CHAT MESSAGE
+// SEND MESSAGE
 
 async function sendMessage() {
   if (!currentRoom || busy) return;
@@ -387,7 +415,7 @@ async function sendMessage() {
     const players = normalizePlayers(room.players);
 
     if (!players.some(p => p.id === me.id)) {
-      showToast("Сен бұл бөлмеде жоқсың!");
+      showToast("Бұл бөлмеге кірмегенсің!");
       return;
     }
 
@@ -400,15 +428,14 @@ async function sendMessage() {
       time: Date.now()
     });
 
-    // Соңғы 5 хабарламаны ғана сақтау
-    const recentMessages = messages.slice(-5);
+    const recent = messages.slice(-MAX_MESSAGES);
 
     await app.tablesDB.updateRow({
       databaseId: app.databaseId,
       tableId: app.tableId,
       rowId: room.$id,
       data: {
-        messages: JSON.stringify(recentMessages)
+        messages: JSON.stringify(recent)
       }
     });
 
@@ -427,7 +454,10 @@ async function sendMessage() {
 $("sendMessageBtn").addEventListener("click", sendMessage);
 
 $("chatInput").addEventListener("keydown", event => {
-  if (event.key === "Enter") sendMessage();
+  if (event.key === "Enter") {
+    event.preventDefault();
+    sendMessage();
+  }
 });
 
 // READY
@@ -469,59 +499,7 @@ $("readyBtn").addEventListener("click", async () => {
 
   } catch (error) {
     console.error(error);
-    showToast("Қате: " + error.message);
-  } finally {
-    busy = false;
-  }
-});
-
-// LEAVE ROOM
-
-$("leaveBtn").addEventListener("click", async () => {
-  if (!currentRoom || busy) return;
-
-  busy = true;
-
-  try {
-    const room = await app.tablesDB.getRow({
-      databaseId: app.databaseId,
-      tableId: app.tableId,
-      rowId: currentRoom.$id
-    });
-
-    const players = normalizePlayers(room.players);
-    const me = getPlayer();
-
-    const remaining = players.filter(p => p.id !== me.id);
-
-    const newHost = remaining.length
-      ? remaining[0].name
-      : room.host;
-
-    await app.tablesDB.updateRow({
-      databaseId: app.databaseId,
-      tableId: app.tableId,
-      rowId: room.$id,
-      data: {
-        players: JSON.stringify(remaining),
-        currentPlayers: remaining.length,
-        host: newHost,
-        status: remaining.length ? "waiting" : "finished"
-      }
-    });
-
-    currentRoom = null;
-
-    clearInterval(refreshTimer);
-    refreshTimer = null;
-
-    $("lobby").classList.add("hidden");
-
-    showToast("Бөлмеден шықтың!");
-
-  } catch (error) {
-    console.error(error);
-    showToast("Шығу қатесі: " + error.message);
+    showToast("Дайындық қатесі: " + error.message);
   } finally {
     busy = false;
   }
@@ -549,7 +527,7 @@ $("startGameBtn").addEventListener("click", async () => {
     }
 
     if (!players.every(p => p.ready)) {
-      showToast("Барлық ойыншы дайын болуы керек!");
+      showToast("Барлығы дайын болуы керек!");
       return;
     }
 
@@ -563,11 +541,60 @@ $("startGameBtn").addEventListener("click", async () => {
     });
 
     await refreshLobby();
-    showToast("Ойын басталды!");
 
   } catch (error) {
     console.error(error);
-    showToast("Ойынды бастау қатесі: " + error.message);
+    showToast("Ойын басталмады: " + error.message);
+  } finally {
+    busy = false;
+  }
+});
+
+// LEAVE ROOM
+
+$("leaveBtn").addEventListener("click", async () => {
+  if (!currentRoom || busy) return;
+
+  busy = true;
+
+  try {
+    const room = await app.tablesDB.getRow({
+      databaseId: app.databaseId,
+      tableId: app.tableId,
+      rowId: currentRoom.$id
+    });
+
+    const players = normalizePlayers(room.players);
+    const me = getPlayer();
+
+    const remaining = players.filter(p => p.id !== me.id);
+
+    await app.tablesDB.updateRow({
+      databaseId: app.databaseId,
+      tableId: app.tableId,
+      rowId: room.$id,
+      data: {
+        players: JSON.stringify(remaining),
+        currentPlayers: remaining.length,
+        host: remaining.length
+          ? remaining[0].name
+          : room.host,
+        status: remaining.length
+          ? room.status
+          : "finished"
+      }
+    });
+
+    currentRoom = null;
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+
+    $("lobby").classList.add("hidden");
+    showToast("Бөлмеден шықтың!");
+
+  } catch (error) {
+    console.error(error);
+    showToast("Шығу қатесі: " + error.message);
   } finally {
     busy = false;
   }
@@ -588,11 +615,19 @@ $("profileBtn").addEventListener("click", () => {
 // NAVIGATION
 
 $("scrollJoin").addEventListener("click", () => {
-  $("joinSection").scrollIntoView({ behavior: "smooth" });
+  $("joinSection").scrollIntoView({
+    behavior: "smooth"
+  });
 });
 
 $("randomBtn").addEventListener("click", () => {
-  showToast("Кездейсоқ іздеу кейін қосылады.");
+  showToast("🎲 Кездейсоқ іздеу кейін қосылады!");
 });
 
-console.log("M MAFIA — CHAT SYSTEM READY!");
+// CLEANUP
+
+window.addEventListener("beforeunload", () => {
+  if (refreshTimer) clearInterval(refreshTimer);
+});
+
+console.log("🎭 M MAFIA GAME SYSTEM READY!");
