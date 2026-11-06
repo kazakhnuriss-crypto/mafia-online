@@ -4,139 +4,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAFIA ONLINE</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <meta name="theme-color" content="#090909">
+  <title>M MAFIA — Online</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="navbar">
-  <div class="logo">M<span>.</span> MAFIA</div>
-  <div class="online"><i></i> ONLINE</div>
-  <button class="profile" id="profileBtn">N</button>
-</header>
+  <header class="navbar">
+    <a href="#" class="logo">M <span>MAFIA</span></a>
+    <button id="profileBtn" class="profile-btn">Профиль</button>
+  </header>
 
-<main class="container">
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">MAFIA ONLINE • 2026</p>
+        <h1>СЕНІМГЕ<br><span>ОРЫН ЖОҚ.</span></h1>
+        <p class="hero-description">
+          Достарыңмен бірге ойна. Рөлдеріңді жасыр.
+          Кімнің кім екенін анықта.
+        </p>
 
-  <section class="hero">
-    <div class="hero-text">
-      <div class="subtitle">THE CITY NEVER SLEEPS</div>
-
-      <h1>СЕНІМГЕ<br><span>ОРЫН ЖОҚ.</span></h1>
-
-      <p>
-        Қалада әркімнің өз құпиясы бар.
-        Рөліңді жасыр, достарыңмен ойна
-        және жеңіске жет.
-      </p>
-
-      <div class="buttons">
-        <button class="primary" id="createBtn">＋ БӨЛМЕ ҚҰРУ</button>
-        <button class="secondary" id="scrollJoin">КОДПЕН КІРУ ↗</button>
-      </div>
-
-      <div class="stats">
-        <div><b>30</b><small>ОЙЫНШЫҒА ДЕЙІН</small></div>
-        <div><b>LIVE</b><small>ОНЛАЙН ОЙЫН</small></div>
-      </div>
-    </div>
-
-    <div class="hero-image">
-      <div class="image-overlay"></div>
-      <div class="image-title">WELCOME TO THE CITY</div>
-      <div class="big-m">M</div>
-    </div>
-  </section>
-
-  <section class="lobby">
-    <div class="section-title">
-      <div>
-        <small>ОЙЫНҒА ҚОСЫЛ</small>
-        <h2>ОЙЫН БӨЛМЕЛЕРІ</h2>
-      </div>
-      <span class="live">● LIVE</span>
-    </div>
-
-    <div class="content">
-
-      <div class="rooms">
-        <div class="room">
-          <div class="room-icon">♠</div>
-          <div class="room-info">
-            <b>Қызыл аудан</b>
-            <small>Классикалық ойын</small>
-          </div>
-          <div class="players">8/12</div>
-          <span class="waiting">КҮТУДЕ</span>
-          <button class="join" data-code="A7K2">КІРУ →</button>
-        </div>
-
-        <div class="room">
-          <div class="room-icon">♦</div>
-          <div class="room-info">
-            <b>Түнгі қала</b>
-            <small>Жылдам ойын</small>
-          </div>
-          <div class="players">10/10</div>
-          <span class="playing">ОЙЫНДА</span>
-          <button class="join disabled" disabled>ТОЛЫҚ</button>
-        </div>
-
-        <div class="room">
-          <div class="room-icon">♣</div>
-          <div class="room-info">
-            <b>Донның үйі</b>
-            <small>Классикалық ойын</small>
-          </div>
-          <div class="players">4/8</div>
-          <span class="waiting">КҮТУДЕ</span>
-          <button class="join" data-code="M9P4">КІРУ →</button>
+        <div class="hero-actions">
+          <button id="createBtn" class="primary-btn">
+            БӨЛМЕ ҚҰРУ
+          </button>
+          <button id="scrollJoin" class="secondary-btn">
+            БӨЛМЕГЕ КІРУ
+          </button>
         </div>
       </div>
+    </section>
 
-      <div class="join-panel" id="joinPanel">
-        <div class="panel-icon">⌁</div>
-        <h3>ЖЕКЕ БӨЛМЕГЕ КІРУ</h3>
-        <p>Досың жіберген кодты енгіз.</p>
-
-        <label>БӨЛМЕ КОДЫ</label>
-        <input id="roomCode" maxlength="6" placeholder="A7K2">
-
-        <button class="primary full" id="joinBtn">ҚОСЫЛУ →</button>
-        <div class="or">НЕМЕСЕ</div>
-        <button class="secondary full" id="randomBtn">КЕЗДЕЙСОҚ ОЙЫН</button>
+    <section class="rooms-section">
+      <div class="section-heading">
+        <p class="eyebrow">ОЙЫНДЫ БАСТА</p>
+        <h2>Ойын бөлмелері</h2>
       </div>
 
-    </div>
-  </section>
+      <div class="rooms-grid">
+        <article class="room-card">
+          <span class="room-status">АШЫҚ</span>
+          <h3>Классикалық мафия</h3>
+          <p>20 ойыншыға дейін</p>
+          <button class="room-join-btn" data-code="MAFIA1">
+            ҚОСЫЛУ
+          </button>
+        </article>
+
+        <article class="room-card">
+          <span class="room-status">АШЫҚ</span>
+          <h3>Достар бөлмесі</h3>
+          <p>Жеке ойын</p>
+          <button class="room-join-btn" data-code="FRIEND">
+            ҚОСЫЛУ
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <section class="join-section" id="joinSection">
+      <p class="eyebrow">ДАЙЫН КОДЫҢ БАР МА?</p>
+      <h2>Бөлмеге қосыл</h2>
+
+      <div class="join-box">
+        <input
+          type="text"
+          id="roomCode"
+          placeholder="Бөлме кодын енгіз"
+          maxlength="20"
+        >
+        <button id="joinBtn" class="primary-btn">
+          КІРУ
+        </button>
+      </div>
+
+      <button id="randomBtn" class="random-btn">
+        КЕЗДЕЙСОҚ ОЙЫН ІЗДЕУ
+      </button>
+    </section>
+  </main>
 
   <footer>
-    <span>© 2026 MAFIA ONLINE</span>
-    <span>ҚАЛА ҰЙЫҚТАМАЙДЫ.</span>
+    <a href="#" class="logo">M <span>MAFIA</span></a>
+    <p>© 2026 Mafia Online</p>
   </footer>
 
-</main>
+  <!-- Бөлме құру терезесі -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="closeModal" class="close-modal">×</button>
 
-<div class="modal hidden" id="modal">
-  <div class="modal-box">
-    <button class="close" id="closeModal">×</button>
-    <small>NEW GAME</small>
-    <h2>БӨЛМЕ ҚҰРУ</h2>
-    <p>Ойыншы атыңды енгіз.</p>
+      <p class="eyebrow">ЖАҢА ОЙЫН</p>
+      <h2>Бөлме құру</h2>
 
-    <input id="nickname" maxlength="16" placeholder="Ойыншы аты">
+      <input
+        type="text"
+        id="nickname"
+        placeholder="Ойыншы никнеймі"
+        maxlength="20"
+      >
 
-    <button class="primary full" id="confirmBtn">ЖАЛҒАСТЫРУ →</button>
-    <div id="result"></div>
+      <button id="confirmBtn" class="primary-btn">
+        ЖАЛҒАСТЫРУ →
+      </button>
+
+      <p id="result"></p>
+    </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div id="toast" class="toast"></div>
 
-<script src="config.js"></script>
-<script src="script.js"></script>
+  <!-- Appwrite SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@latest"></script>
+
+  <!-- Өз файлдарымыз -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+
 </body>
 </html>
