@@ -1,129 +1,155 @@
 
-const $ = id => document.getElementById(id);
+const app = window.mafiaAppwrite;
 
-let playerName = localStorage.getItem("mafia_name") || "";
+const createBtn = document.getElementById("createBtn");
+const joinBtn = document.getElementById("joinBtn");
+const modal = document.getElementById("modal");
+const closeModal = document.getElementById("closeModal");
+const confirmBtn = document.getElementById("confirmBtn");
+const nickname = document.getElementById("nickname");
+const roomCode = document.getElementById("roomCode");
+const result = document.getElementById("result");
+const toast = document.getElementById("toast");
 
-function toast(message) {
-  const box = $("toast");
-  if (!box) {
-    alert(message);
-    return;
-  }
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
 
-  box.textContent = message;
-  box.classList.add("show");
-
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => {
-    box.classList.remove("show");
-  }, 2500);
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
 }
 
-// Бөлме терезесін ашу
-$("createBtn").onclick = () => {
-  $("modal").classList.remove("hidden");
-  $("nickname").value = playerName;
-  $("result").textContent = "";
-};
+function generateCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
 
-// Терезені жабу
-$("closeModal").onclick = () => {
-  $("modal").classList.add("hidden");
-};
+function openModal() {
+  modal.classList.remove("hidden");
+  result.textContent = "";
+  nickname.value = localStorage.getItem("mafia_name") || "";
+}
 
-// Сыртқы аймақты басқанда жабу
-$("modal").onclick = event => {
-  if (event.target === $("modal")) {
-    $("modal").classList.add("hidden");
-  }
-};
+function hideModal() {
+  modal.classList.add("hidden");
+}
 
-// Бөлме жасау
-$("confirmBtn").onclick = () => {
-  const name = $("nickname").value.trim();
+createBtn.addEventListener("click", openModal);
+closeModal.addEventListener("click", hideModal);
 
-  if (name.length < 2) {
-    toast("Ойыншы атын енгіз!");
+confirmBtn.addEventListener("click", async () => {
+  const host = nickname.value.trim();
+
+  if (!host) {
+    showToast("Никнейм енгіз!");
     return;
   }
 
-  playerName = name;
-  localStorage.setItem("mafia_name", name);
+  if (!app) {
+    showToast("Appwrite конфигурациясы табылмады!");
+    return;
+  }
 
-  const code = Math.random()
-    .toString(36)
-    .substring(2, 6)
-    .toUpperCase();
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = "ЖАСАЛУДА...";
 
-  $("result").innerHTML =
-    `Сәлем, <b>${name}</b>!<br><br>
-     Бөлме коды: <b>${code}</b><br>
-     <small>Онлайн жүйені Appwrite қосылғанда іске қосамыз.</small>`;
+  try {
+    const code = generateCode();
 
-  $("confirmBtn").textContent = "ДАЙЫН";
-  $("confirmBtn").onclick = () => {
-    $("modal").classList.add("hidden");
-    $("confirmBtn").textContent = "ЖАЛҒАСТЫРУ →";
-  };
-};
+    await app.tablesDB.createRow({
+      databaseId: app.databaseId,
+      tableId: app.tableId,
+      rowId: Appwrite.ID.unique(),
+      data: {
+        code: code,
+        host: host,
+        maxPlayers: 20,
+        status: "waiting",
+        players: JSON.stringify([host])
+      }
+    });
 
-// Бөлме кодымен кіру
-function joinRoom(code) {
+    localStorage.setItem("mafia_name", host);
+
+    result.textContent = "Бөлме коды: " + code;
+    showToast("Бөлме сәтті құрылды!");
+
+  } catch (error) {
+    console.error(error);
+    showToast("Қате: " + error.message);
+  } finally {
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = "ЖАЛҒАСТЫРУ →";
+  }
+});
+
+async function joinRoom(code) {
+  if (!app) {
+    showToast("Appwrite қосылмаған!");
+    return;
+  }
+
   code = code.trim().toUpperCase();
 
-  if (code.length < 4) {
-    toast("Бөлме кодын дұрыс енгіз!");
+  if (!code) {
+    showToast("Бөлме кодын енгіз!");
     return;
   }
 
-  toast("Код қабылданды: " + code);
+  try {
+    const response = await app.tablesDB.listRows({
+      databaseId: app.databaseId,
+      tableId: app.tableId,
+      queries: [
+        Appwrite.Query.equal("code", code),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    if (response.rows.length === 0) {
+      showToast("Мұндай бөлме табылмады!");
+      return;
+    }
+
+    const room = response.rows[0];
+
+    showToast("Бөлме табылды: " + room.code);
+
+  } catch (error) {
+    console.error(error);
+    showToast("Бөлмеге қосылу қатесі: " + error.message);
+  }
 }
 
-$("joinBtn").onclick = () => {
-  joinRoom($("roomCode").value);
-};
-
-$("roomCode").addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    joinRoom($("roomCode").value);
-  }
+joinBtn.addEventListener("click", () => {
+  joinRoom(roomCode.value);
 });
 
-$("roomCode").addEventListener("input", event => {
-  event.target.value = event.target.value
-    .toUpperCase()
-    .replace(/[^A-Z0-9]/g, "");
-});
-
-// Дайын бөлмеге кіру
-document.querySelectorAll(".join[data-code]").forEach(button => {
-  button.onclick = () => {
+document.querySelectorAll(".room-join-btn").forEach(button => {
+  button.addEventListener("click", () => {
     joinRoom(button.dataset.code);
-  };
+  });
 });
 
-// Кездейсоқ ойын
-$("randomBtn").onclick = () => {
-  toast("Кездейсоқ ойын әзірге дайындалуда.");
-};
+document.getElementById("profileBtn").addEventListener("click", () => {
+  const oldName = localStorage.getItem("mafia_name") || "";
+  const newName = prompt("Жаңа никнейм:", oldName);
 
-// Лоббиге жылжу
-$("scrollJoin").onclick = () => {
-  $("joinPanel").scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-  $("roomCode").focus();
-};
-
-// Профиль
-$("profileBtn").onclick = () => {
-  const name = prompt("Жаңа ойыншы атыңды енгіз:", playerName);
-
-  if (name && name.trim().length >= 2) {
-    playerName = name.trim();
-    localStorage.setItem("mafia_name", playerName);
-    toast("Профиль жаңартылды!");
+  if (newName && newName.trim()) {
+    localStorage.setItem("mafia_name", newName.trim());
+    showToast("Никнейм сақталды!");
   }
-};
+});
+
+document.getElementById("scrollJoin").addEventListener("click", () => {
+  document.getElementById("joinSection").scrollIntoView({
+    behavior: "smooth"
+  });
+});
+
+document.getElementById("randomBtn").addEventListener("click", () => {
+  showToast("Әзірге бөлмелер іздеу функциясы дайындалуда.");
+});
+
+console.log("Mafia Online дайын!");
+console.log("Appwrite конфигурациясы:", app ? "табылды" : "табылмады");
