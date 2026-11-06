@@ -4,136 +4,176 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080809">
-  <title>M MAFIA — Online Mafia</title>
+  <meta name="theme-color" content="#09090d">
+  <title>M MAFIA — The Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header class="navbar">
-  <a href="#" class="logo">M <span>MAFIA</span></a>
-  <button id="profileBtn" class="profile-btn">ПРОФИЛЬ</button>
+<header class="topbar">
+  <a class="brand" href="#">M<span>●</span>MAFIA</a>
+  <div class="top-status"><i></i> ONLINE GAME</div>
+  <button id="profileBtn" class="profile-btn">👤 Профиль</button>
 </header>
 
-<main>
+<main class="game-shell">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content">
-      <p class="eyebrow">ONLINE MULTIPLAYER GAME</p>
-      <h1>СЕНІМГЕ <span>ОРЫН ЖОҚ.</span></h1>
-      <p class="hero-description">
-        Достарыңмен бірге ойна. Рөлдеріңді жасыр.
-        Кімнің өтірік айтып тұрғанын анықта.
-      </p>
+  <section class="welcome-panel">
+    <div class="floating-emoji emoji-one">🎭</div>
+    <div class="floating-emoji emoji-two">🕵️</div>
+    <div class="floating-emoji emoji-three">🌙</div>
 
-      <div class="hero-actions">
-        <button id="createBtn" class="primary-btn">БӨЛМЕ ҚҰРУ</button>
-        <button id="scrollJoin" class="secondary-btn">КОДПЕН КІРУ</button>
+    <div class="welcome-copy">
+      <div class="eyebrow">THE CITY NEVER SLEEPS</div>
+      <h1>WHO IS THE <span>MAFIA?</span></h1>
+      <p>Сенім артпа. Өтірікке сенбе. Тірі қал.</p>
+    </div>
+
+    <div class="welcome-actions">
+      <button id="createBtn" class="btn btn-red">＋ БӨЛМЕ ҚҰРУ</button>
+      <button id="scrollJoin" class="btn btn-dark">КОДПЕН КІРУ</button>
+    </div>
+  </section>
+
+  <section id="joinSection" class="join-panel">
+    <div class="panel-title">
+      <div>
+        <span class="eyebrow">QUICK ACCESS</span>
+        <h2>ОЙЫНҒА ҚОСЫЛУ</h2>
+      </div>
+      <span class="live-dot">● LIVE</span>
+    </div>
+
+    <div class="join-controls">
+      <input id="roomCode" maxlength="10" placeholder="БӨЛМЕ КОДЫ">
+      <button id="joinBtn" class="btn btn-red">КІРУ →</button>
+      <button id="randomBtn" class="btn btn-dark">🎲 RANDOM</button>
+    </div>
+  </section>
+
+  <section class="quick-rooms">
+    <div class="section-title">
+      <span class="eyebrow">QUICK PLAY</span>
+      <h2>ЖЫЛДАМ БӨЛМЕЛЕР</h2>
+    </div>
+
+    <div class="quick-grid">
+      <article class="quick-card">
+        <span class="quick-icon">🔪</span>
+        <div><b>MAFIA ROOM</b><small>Достарыңмен ойна</small></div>
+        <button class="room-join-btn mini-btn" data-code="MAFIA1">→</button>
+      </article>
+
+      <article class="quick-card">
+        <span class="quick-icon">🩸</span>
+        <div><b>FRIENDS ROOM</b><small>Жабық ойын</small></div>
+        <button class="room-join-btn mini-btn" data-code="FRIEND">→</button>
+      </article>
+    </div>
+    <p class="demo-note">Бұл бөлмелер — демонстрациялық кодтар.</p>
+  </section>
+
+  <!-- GAME LOBBY -->
+  <section id="lobby" class="lobby hidden">
+
+    <div class="lobby-top">
+      <div>
+        <span class="eyebrow">MULTIPLAYER SESSION</span>
+        <h2>🎮 GAME LOBBY</h2>
+      </div>
+      <div class="room-code-box">
+        <small>ROOM CODE</small>
+        <strong id="lobbyCode">------</strong>
       </div>
     </div>
-  </section>
 
-  <!-- ROOMS -->
-  <section class="rooms-section">
-    <div class="section-heading">
-      <p class="eyebrow">FIND A GAME</p>
-      <h2>ОЙЫН БӨЛМЕЛЕРІ</h2>
-    </div>
+    <div class="game-layout">
 
-    <div class="rooms-grid">
-      <article class="room-card">
-        <span class="room-status">DEMO</span>
-        <h3>MAFIA ROOM</h3>
-        <p>Достарыңмен ойна</p>
-        <button class="room-join-btn" data-code="MAFIA1">КІРУ</button>
-      </article>
-
-      <article class="room-card">
-        <span class="room-status">DEMO</span>
-        <h3>FRIENDS ROOM</h3>
-        <p>Жабық ойын бөлмесі</p>
-        <button class="room-join-btn" data-code="FRIEND">КІРУ</button>
-      </article>
-    </div>
-  </section>
-
-  <!-- JOIN -->
-  <section id="joinSection" class="join-section">
-    <p class="eyebrow">JOIN GAME</p>
-    <h2>БӨЛМЕГЕ ҚОСЫЛУ</h2>
-
-    <div class="join-box">
-      <input
-        id="roomCode"
-        type="text"
-        maxlength="10"
-        placeholder="Бөлме кодын енгіз..."
-      >
-      <button id="joinBtn" class="primary-btn">ҚОСЫЛУ</button>
-    </div>
-
-    <button id="randomBtn" class="random-btn">
-      КЕЗДЕЙСОҚ БӨЛМЕ ІЗДЕУ
-    </button>
-  </section>
-
-  <!-- LOBBY -->
-  <section id="lobby" class="join-section hidden">
-    <p class="eyebrow">GAME LOBBY</p>
-    <h2>ОЙЫН БӨЛМЕСІ</h2>
-
-    <p>Бөлме коды:</p>
-    <div id="lobbyCode">------</div>
-    <p id="lobbyCount">Ойыншылар: 0 / 20</p>
-
-    <div id="playersList"></div>
-
-    <div class="lobby-actions">
-      <button id="readyBtn" class="primary-btn">ДАЙЫН</button>
-      <button id="leaveBtn" class="secondary-btn">ШЫҒУ</button>
-      <button id="startGameBtn" class="primary-btn hidden">
-        ОЙЫНДЫ БАСТАУ
-      </button>
-    </div>
-
-    <!-- GAME CHAT -->
-    <div class="game-chat">
-      <div class="chat-heading">
-        <div>
-          <p class="eyebrow">LIVE MESSAGES</p>
-          <h2>ОЙЫН ЧАТЫ</h2>
+      <!-- PLAYERS -->
+      <aside class="side-panel players-panel">
+        <div class="panel-title">
+          <h3>👥 ОЙЫНШЫЛАР</h3>
+          <span id="lobbyCount">0 / 20</span>
         </div>
-        <span class="chat-online">● ONLINE</span>
-      </div>
+        <div id="playersList" class="players-list"></div>
 
-      <div id="chatMessages" class="chat-messages">
-        <p class="chat-empty">Әзірге хабарлама жоқ...</p>
-      </div>
+        <div class="player-actions">
+          <button id="readyBtn" class="btn btn-red full-btn">ДАЙЫН</button>
+          <button id="leaveBtn" class="btn btn-dark full-btn">ШЫҒУ</button>
+        </div>
+      </aside>
 
-      <div class="chat-input">
-        <input
-          id="chatInput"
-          type="text"
-          maxlength="150"
-          placeholder="Хабарлама жаз..."
-        >
-        <button id="sendMessageBtn" class="primary-btn">
-          ЖІБЕРУ
+      <!-- GAME ARENA -->
+      <section class="arena-panel">
+        <div class="arena-scene">
+          <div class="moon">🌕</div>
+          <div class="city-glow"></div>
+          <div class="arena-content">
+            <span class="eyebrow">WELCOME TO THE CITY</span>
+            <div class="arena-mask">🎭</div>
+            <h2>MAFIA <span>NIGHT</span></h2>
+            <p>Қалада кімнің кім екенін ешкім білмейді...</p>
+            <div class="arena-divider"></div>
+            <div class="arena-info">
+              <span>🌙 NIGHT CITY</span>
+              <span>🩸 DANGER LEVEL: HIGH</span>
+            </div>
+          </div>
+          <div class="scene-emoji">🦇</div>
+        </div>
+
+        <div class="game-status">
+          <div>
+            <small>ОЙЫН КҮЙІ</small>
+            <strong>Ойыншылар дайындалуда</strong>
+          </div>
+          <span class="waiting-indicator"><i></i> WAITING</span>
+        </div>
+
+        <button id="startGameBtn" class="btn btn-red start-btn hidden">
+          ⚔️ ОЙЫНДЫ БАСТАУ
         </button>
-      </div>
+      </section>
+
+      <!-- CHAT -->
+      <aside class="side-panel chat-panel">
+        <div class="panel-title">
+          <div>
+            <span class="eyebrow">LIVE MESSAGES</span>
+            <h3>💬 ЧАТ</h3>
+          </div>
+          <span class="chat-live">● LIVE</span>
+        </div>
+
+        <div id="chatMessages" class="chat-messages">
+          <div class="chat-empty">
+            <span>💬</span>
+            <p>Әзірге хабарлама жоқ</p>
+            <small>Бірінші болып жаз!</small>
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input id="chatInput" maxlength="150" placeholder="Хабарлама жаз...">
+          <button id="sendMessageBtn" class="send-btn">➤</button>
+        </div>
+
+        <div class="chat-hint">ENTER — жіберу</div>
+      </aside>
+
     </div>
 
-    <!-- VOICE CHAT PLACEHOLDER -->
-    <div class="voice-chat">
-      <p class="eyebrow">COMING SOON</p>
-      <h3>🎙️ VOICE CHAT</h3>
-      <p>Дауыстық чат келесі жаңартуда қосылады.</p>
-      <button id="voiceBtn" class="secondary-btn" disabled>
-        <span>🎤</span> ДАУЫСТЫҚ ЧАТ
+    <!-- VOICE -->
+    <section class="voice-panel">
+      <div class="voice-icon">🎙️</div>
+      <div class="voice-copy">
+        <b>VOICE CHANNEL</b>
+        <small>Ойыншылармен дауыстап сөйлесу</small>
+      </div>
+      <button id="voiceBtn" class="btn btn-dark" disabled>
+        ЖАҚЫНДА
       </button>
-    </div>
+    </section>
 
   </section>
 
@@ -143,21 +183,11 @@
 <div id="modal" class="modal hidden">
   <div class="modal-content">
     <button id="closeModal" class="close-modal">×</button>
-
-    <p class="eyebrow">CREATE YOUR ROOM</p>
-    <h2>НИКНЕЙМ ЕНГІЗ</h2>
-
-    <input
-      id="nickname"
-      type="text"
-      maxlength="20"
-      placeholder="Сенің никнеймің..."
-    >
-
-    <button id="confirmBtn" class="primary-btn">
-      БӨЛМЕ ҚҰРУ
-    </button>
-
+    <div class="modal-icon">🎭</div>
+    <span class="eyebrow">CREATE SESSION</span>
+    <h2>ОЙЫНШЫ АТЫ</h2>
+    <input id="nickname" maxlength="20" placeholder="Никнейм енгіз...">
+    <button id="confirmBtn" class="btn btn-red full-btn">БӨЛМЕ ҚҰРУ</button>
     <p id="result"></p>
   </div>
 </div>
@@ -165,14 +195,12 @@
 <div id="toast" class="toast"></div>
 
 <footer>
-  <a href="#" class="logo">M <span>MAFIA</span></a>
-  <p>© 2026 M MAFIA ONLINE</p>
+  <span class="brand">M<span>●</span>MAFIA</span>
+  <small>THE CITY NEVER SLEEPS · 2026</small>
 </footer>
 
-<!-- APPWRITE -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@latest"></script>
 <script src="config.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
