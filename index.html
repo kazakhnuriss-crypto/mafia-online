@@ -8,120 +8,110 @@
   <title>M MAFIA — Online</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <header class="navbar">
-    <a href="#" class="logo">M <span>MAFIA</span></a>
-    <button id="profileBtn" class="profile-btn">Профиль</button>
-  </header>
+<header class="navbar">
+  <a href="#" class="logo">M <span>MAFIA</span></a>
+  <button id="profileBtn" class="profile-btn">Профиль</button>
+</header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">MAFIA ONLINE • 2026</p>
-        <h1>СЕНІМГЕ<br><span>ОРЫН ЖОҚ.</span></h1>
-        <p class="hero-description">
-          Достарыңмен бірге ойна. Рөлдеріңді жасыр.
-          Кімнің кім екенін анықта.
-        </p>
-
-        <div class="hero-actions">
-          <button id="createBtn" class="primary-btn">
-            БӨЛМЕ ҚҰРУ
-          </button>
-          <button id="scrollJoin" class="secondary-btn">
-            БӨЛМЕГЕ КІРУ
-          </button>
-        </div>
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">MAFIA ONLINE • 2026</p>
+      <h1>СЕНІМГЕ<br><span>ОРЫН ЖОҚ.</span></h1>
+      <p class="hero-description">
+        Достарыңмен бірге ойна. Рөлдеріңді жасыр.
+        Кімнің кім екенін анықта.
+      </p>
+      <div class="hero-actions">
+        <button id="createBtn" class="primary-btn">БӨЛМЕ ҚҰРУ</button>
+        <button id="scrollJoin" class="secondary-btn">БӨЛМЕГЕ КІРУ</button>
       </div>
-    </section>
-
-    <section class="rooms-section">
-      <div class="section-heading">
-        <p class="eyebrow">ОЙЫНДЫ БАСТА</p>
-        <h2>Ойын бөлмелері</h2>
-      </div>
-
-      <div class="rooms-grid">
-        <article class="room-card">
-          <span class="room-status">АШЫҚ</span>
-          <h3>Классикалық мафия</h3>
-          <p>20 ойыншыға дейін</p>
-          <button class="room-join-btn" data-code="MAFIA1">
-            ҚОСЫЛУ
-          </button>
-        </article>
-
-        <article class="room-card">
-          <span class="room-status">АШЫҚ</span>
-          <h3>Достар бөлмесі</h3>
-          <p>Жеке ойын</p>
-          <button class="room-join-btn" data-code="FRIEND">
-            ҚОСЫЛУ
-          </button>
-        </article>
-      </div>
-    </section>
-
-    <section class="join-section" id="joinSection">
-      <p class="eyebrow">ДАЙЫН КОДЫҢ БАР МА?</p>
-      <h2>Бөлмеге қосыл</h2>
-
-      <div class="join-box">
-        <input
-          type="text"
-          id="roomCode"
-          placeholder="Бөлме кодын енгіз"
-          maxlength="20"
-        >
-        <button id="joinBtn" class="primary-btn">
-          КІРУ
-        </button>
-      </div>
-
-      <button id="randomBtn" class="random-btn">
-        КЕЗДЕЙСОҚ ОЙЫН ІЗДЕУ
-      </button>
-    </section>
-  </main>
-
-  <footer>
-    <a href="#" class="logo">M <span>MAFIA</span></a>
-    <p>© 2026 Mafia Online</p>
-  </footer>
-
-  <!-- Бөлме құру терезесі -->
-  <div id="modal" class="modal hidden">
-    <div class="modal-content">
-      <button id="closeModal" class="close-modal">×</button>
-
-      <p class="eyebrow">ЖАҢА ОЙЫН</p>
-      <h2>Бөлме құру</h2>
-
-      <input
-        type="text"
-        id="nickname"
-        placeholder="Ойыншы никнеймі"
-        maxlength="20"
-      >
-
-      <button id="confirmBtn" class="primary-btn">
-        ЖАЛҒАСТЫРУ →
-      </button>
-
-      <p id="result"></p>
     </div>
+  </section>
+
+  <section class="rooms-section">
+    <div class="section-heading">
+      <p class="eyebrow">ОЙЫНДЫ БАСТА</p>
+      <h2>Ойын бөлмелері</h2>
+    </div>
+
+    <div class="rooms-grid">
+      <article class="room-card">
+        <span class="room-status">АШЫҚ</span>
+        <h3>Классикалық мафия</h3>
+        <p>20 ойыншыға дейін</p>
+        <button class="room-join-btn" data-code="MAFIA1">ҚОСЫЛУ</button>
+      </article>
+
+      <article class="room-card">
+        <span class="room-status">АШЫҚ</span>
+        <h3>Достар бөлмесі</h3>
+        <p>Жеке ойын</p>
+        <button class="room-join-btn" data-code="FRIEND">ҚОСЫЛУ</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="join-section" id="joinSection">
+    <p class="eyebrow">ДАЙЫН КОДЫҢ БАР МА?</p>
+    <h2>Бөлмеге қосыл</h2>
+
+    <div class="join-box">
+      <input id="roomCode" type="text" placeholder="Бөлме кодын енгіз" maxlength="20">
+      <button id="joinBtn" class="primary-btn">КІРУ</button>
+    </div>
+
+    <button id="randomBtn" class="random-btn">КЕЗДЕЙСОҚ ОЙЫН ІЗДЕУ</button>
+  </section>
+
+  <!-- LOBBY -->
+  <section id="lobby" class="join-section hidden">
+    <p class="eyebrow">ОЙЫНҒА ДАЙЫНДАЛ</p>
+    <h2>Ойын бөлмесі</h2>
+
+    <div class="room-card">
+      <p>БӨЛМЕ КОДЫ</p>
+      <h2 id="lobbyCode">------</h2>
+      <p id="lobbyCount">Ойыншылар: 0 / 20</p>
+    </div>
+
+    <div id="playersList" class="rooms-grid"></div>
+
+    <div class="hero-actions">
+      <button id="readyBtn" class="primary-btn">ДАЙЫН ЕМЕСПІН</button>
+      <button id="leaveBtn" class="secondary-btn">БӨЛМЕДЕН ШЫҒУ</button>
+    </div>
+
+    <button id="startGameBtn" class="primary-btn hidden">
+      ОЙЫНДЫ БАСТАУ
+    </button>
+  </section>
+</main>
+
+<footer>
+  <a href="#" class="logo">M <span>MAFIA</span></a>
+  <p>© 2026 Mafia Online</p>
+</footer>
+
+<!-- CREATE MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <button id="closeModal" class="close-modal">×</button>
+    <p class="eyebrow">ЖАҢА ОЙЫН</p>
+    <h2>Бөлме құру</h2>
+    <input id="nickname" type="text" placeholder="Ойыншы никнеймі" maxlength="20">
+    <button id="confirmBtn" class="primary-btn">ЖАЛҒАСТЫРУ →</button>
+    <p id="result"></p>
   </div>
+</div>
 
-  <div id="toast" class="toast"></div>
+<div id="toast" class="toast"></div>
 
-  <!-- Appwrite SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@latest"></script>
-
-  <!-- Өз файлдарымыз -->
-  <script src="config.js"></script>
-  <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/appwrite@latest"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
