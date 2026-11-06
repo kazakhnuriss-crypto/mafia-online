@@ -1,5 +1,17 @@
 
-const APPWRITE_ENDPOINT = "https://nyc.cloud.appwrite.io/v1";
-const APPWRITE_PROJECT_ID = "6aeda05d001946b2dbe1";
+const client = new Appwrite.Client();
 
-// Appwrite клиентін кейін осы баптаулармен қосамыз
+client
+  .setEndpoint("https://nyc.cloud.appwrite.io/v1")
+  .setProject("6aeda05d001946b2dbe1");
+
+const tablesDB = new Appwrite.TablesDB(client);
+
+window.mafiaAppwrite = {
+  client: client,
+  tablesDB: tablesDB,
+  databaseId: "6aeda6dd002aa748d406",
+  tableId: "rooms"
+};
+
+console.log("Mafia Appwrite connected!");
