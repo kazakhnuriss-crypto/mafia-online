@@ -1,8 +1,5 @@
-const SUPABASE_URL = "https://nisxzlebjbrplwvibaxk.supabase.co";
 
-const SUPABASE_KEY = "sb_publishable_EOj56tG72uzp2VYfHQ4evw_xebQOghG";
+const APPWRITE_ENDPOINT = "https://nyc.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID = "6aeda05d001946b2dbe1";
 
-window.supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+// Appwrite клиентін кейін осы баптаулармен қосамыз
