@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090d">
+  <title>MAFIA ONLINE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">M<span>AFIA</span></div>
+      <button class="settings" onclick="showSettings()">⚙</button>
+    </header>
 
+    <main>
+      <div class="hero">
+        <div class="eyebrow">● ONLINE GAME</div>
+        <h1>TRUST<br><span>NO ONE.</span></h1>
+        <p>Enter the world of mystery.</p>
+        <button class="primary" onclick="createRoom()">CREATE ROOM ↗</button>
+        <button class="secondary" onclick="joinRoom()">JOIN ROOM</button>
+      </div>
+
+      <div class="stats">
+        <div><b>15</b><small>MAX PLAYERS</small></div>
+        <div><b>24/7</b><small>ONLINE</small></div>
+        <div><b>3</b><small>LANGUAGES</small></div>
+      </div>
+
+      <section id="settings" class="settings-panel hidden">
+        <h2>SETTINGS</h2>
+        <p>Language / Язык / Тіл</p>
+        <div class="languages">
+          <button onclick="setLanguage('EN')">EN</button>
+          <button onclick="setLanguage('RU')">RU</button>
+          <button onclick="setLanguage('KZ')">KZ</button>
+        </div>
+      </section>
+    </main>
+    <footer>MAFIA ONLINE © 2026</footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+  </html>
