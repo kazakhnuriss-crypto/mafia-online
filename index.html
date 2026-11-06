@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
 </head>
 <body>
   <div class="app">
+
     <header class="header">
       <a class="logo" href="#" onclick="goHome()">MAFIA<span>.</span></a>
       <div class="header-right">
@@ -23,8 +25,10 @@
         <div class="eyebrow"><span></span> MAFIA MULTIPLAYER</div>
         <h1>TRUST<br><span>NO ONE.</span></h1>
         <p data-i18n="subtitle">Your friends. Your enemies. One city.</p>
+
         <button class="btn btn-primary" onclick="createRoom()" data-i18n="create">CREATE ROOM</button>
         <button class="btn btn-outline" onclick="joinRoom()" data-i18n="join">JOIN ROOM</button>
+
         <div class="hero-bottom">
           <span>●</span> <span data-i18n="ready">THE CITY IS WAITING</span>
         </div>
@@ -48,18 +52,30 @@
           <h2 data-i18n="menu">EXPLORE</h2>
           <span class="section-line"></span>
         </div>
+
         <div class="menu-grid">
           <button class="menu-card" onclick="showFriends()">
-            <span>♟</span><b data-i18n="friends">Friends</b><small data-i18n="friendsDesc">Your people</small>
+            <span>♟</span>
+            <b data-i18n="friends">Friends</b>
+            <small data-i18n="friendsDesc">Your people</small>
           </button>
+
           <button class="menu-card" onclick="showLeaderboard()">
-            <span>♛</span><b data-i18n="leaderboard">Leaderboard</b><small data-i18n="leaderDesc">Top players</small>
+            <span>♛</span>
+            <b data-i18n="leaderboard">Leaderboard</b>
+            <small data-i18n="leaderDesc">Top players</small>
           </button>
+
           <button class="menu-card" onclick="showHistory()">
-            <span>◷</span><b data-i18n="history">History</b><small data-i18n="historyDesc">Past games</small>
+            <span>◷</span>
+            <b data-i18n="history">History</b>
+            <small data-i18n="historyDesc">Past games</small>
           </button>
+
           <button class="menu-card" onclick="showSettings()">
-            <span>⚙</span><b data-i18n="settings">Settings</b><small data-i18n="settingsDesc">Customize</small>
+            <span>⚙</span>
+            <b data-i18n="settings">Settings</b>
+            <small data-i18n="settingsDesc">Customize</small>
           </button>
         </div>
       </section>
@@ -69,13 +85,18 @@
           <h2 data-i18n="yourRoom">YOUR ROOM</h2>
           <span class="section-line"></span>
         </div>
+
         <div class="room-card">
           <div class="room-top">
-            <span class="room-status"><i></i><span data-i18n="waiting">WAITING FOR PLAYERS</span></span>
+            <span class="room-status">
+              <i></i><span data-i18n="waiting">WAITING FOR PLAYERS</span>
+            </span>
             <span class="room-code" id="room-code">------</span>
           </div>
+
           <h3 id="room-title">MAFIA ROOM</h3>
           <p id="room-description"></p>
+
           <div class="room-actions">
             <button class="btn btn-primary" onclick="copyRoomCode()" data-i18n="copyCode">COPY CODE</button>
             <button class="btn btn-outline" onclick="leaveRoom()" data-i18n="leave">LEAVE</button>
@@ -85,10 +106,18 @@
     </main>
 
     <nav class="bottom-nav">
-      <button class="nav-item active" onclick="goHome()"><span>⌂</span><small data-i18n="home">Home</small></button>
-      <button class="nav-item" onclick="createRoom()"><span>♟</span><small data-i18n="play">Play</small></button>
-      <button class="nav-item" onclick="showFriends()"><span>♧</span><small data-i18n="friends">Friends</small></button>
-      <button class="nav-item" onclick="showSettings()"><span>⚙</span><small data-i18n="settings">Settings</small></button>
+      <button class="nav-item active" onclick="goHome()">
+        <span>⌂</span><small data-i18n="home">Home</small>
+      </button>
+      <button class="nav-item" onclick="createRoom()">
+        <span>♟</span><small data-i18n="play">Play</small>
+      </button>
+      <button class="nav-item" onclick="showFriends()">
+        <span>♧</span><small data-i18n="friends">Friends</small>
+      </button>
+      <button class="nav-item" onclick="showSettings()">
+        <span>⚙</span><small data-i18n="settings">Settings</small>
+      </button>
     </nav>
   </div>
 
@@ -101,6 +130,14 @@
   </div>
 
   <div class="toast" id="toast"></div>
+
+  <!-- Supabase library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Project configuration -->
+  <script src="config.js"></script>
+
+  <!-- Main game script -->
   <script src="script.js"></script>
 </body>
-    </html>
+</html>
